@@ -1,0 +1,26 @@
+D:\New folder\finance.xlsx
+
+#fig, axes = plt.subplots(figsize =(16, 9))
+#df_DL.plot.bar()
+#fig, (ax1,ax2) = plt.subplots(nrows=2, ncols=1,figsize =(10, 9),sharex=True)
+fig1, ax2 = plt.subplots()
+fig2, ax1 = plt.subplots()
+ax1.plot (df_new.index,df_new['YTD cost as a % of Revenue'],label='YTD')
+ax2.plot (df_new.index,df_new['Sales Cost ($)'],label='pythob')
+ax2.plot (df_new.index,df_new['Marketing Cost ($)'],label='jawa')
+
+ax1.legend()
+
+ax1.set_ylabel('YTD')
+ax1.set_title('Sales and Marketting')
+
+ax2.legend()
+ax2.set_ylabel('Cost')
+#ax2.set_title('second graph')
+ax2.set_xlabel('MOnths')
+plt.tight_layout()
+plt.show
+#df_new[["Total Cost","Revenue ($)","Sales Cost ($)","Revenue ($)"]].plot(ax=axes[0], kind='bar')
+#df_new[["Sales Cost ($)", "Marketing Cost ($)","Total Cost"]].plot(ax=axes[1], kind='bar');
+fig1.savefig('plot121.jpg',bbox_inches='tight', dpi=150)
+fig2.savefig('plot111.jpg',bbox_inches='tight', dpi=150)

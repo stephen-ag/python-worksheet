@@ -1,0 +1,33 @@
+# code to combine all the sheets of excel into one sheet
+# code to combine selected sheets based on the sheet name into one sheet
+#!!!!!
+
+import pandas as pd
+#mport re
+file=pd.ExcelFile('CUsers1012031MRM.xlsm')
+worksheets = file.sheet_names
+print('All worksheets',worksheets)
+
+#ata_sheet_list =
+#x for x in worksheets if re.search('r',x,re.IGNORECASE)]
+#rint('sheet containing sales',data_sheet_list)
+ 
+each_data_worksheet ={}
+
+for data in worksheets
+    each_data_worksheet[data]=pd.read_excel('CUsers1012031MRM.xlsm',
+    sheet_name = data,header = 2,index_col=0,usecols=BM)
+
+length =len(worksheets)
+
+df= pd.DataFrame()
+if length  1
+    for data in worksheets
+        df= pd.concat([df,each_data_worksheet[data]],axis =1,sort = False)
+        
+else
+    for data in worksheets
+        df= each_data_worksheet[data]
+#print(Sales & Marketing)       
+print(df)      
+df.to_excel('CUsers1012031MRM_out2.xlsx')

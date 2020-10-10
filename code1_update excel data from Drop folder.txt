@@ -1,0 +1,52 @@
+import shutil
+import os
+import pandas as pd
+from openpyxl import load_workbook
+import time
+import os.path
+from os import path
+
+def job():
+     
+   
+    processed_files = [ file for file in os.listdir('D:/New folder/Processed/') if file.endswith('.xlsx')]
+    print(processed_files)
+    processed_path = os.path.join(os.getcwd(),'D:/New folder/Processed/',''.join(processed_files))
+    print ("File exists:" + str(path.exists('D:/New folder/Processed/Period1.xlsx')))
+    print(processed_path)
+
+    dropped_files = [ file for file in os.listdir('D:/New folder/Drop/') if file.endswith('.xlsx')]
+    print(dropped_files)
+    drop_path = os.path.join(os.getcwd(),'D:/New folder/Drop/',''.join(dropped_files))
+    print ("File exists in drop:" + str(path.exists('D:/New folder/Drop/period6.xlsx')))
+    print(drop_path)
+    
+    if dropped_files:
+        df=pd.read_excel(drop_path)
+        print(df)
+                         
+        df_main=pd.read_excel('D:/New folder/main.xlsx',columns=['Month','Dept','Sales'])
+        current_rows =df_main.shape[0]
+        print(current_rows)
+        
+        workbook_name = 'D:/New folder/main.xlsx'
+        wb=load_workbook(workbook_name)
+        page=wb['Sheet1']
+        
+        new_entries = df.values.tolist()
+        print(new_entries[0])
+        for i in new_entries:
+            page.append(i)
+            wb.save(filename=workbook_name)
+            df_main_new=pd.read_excel('D:/New folder/main.xlsx',columns=['Month','Dept','Sales'])
+            new_rows=df_main_new.shape[0]
+            print(new_rows)
+            
+            if new_rows == current_rows+df.shape[0]:
+                shutil.move(drop_path, os.path.join(os.getcwd(),'D:/New folder/Processed/')) 
+            print("All Files Process Completed")
+   
+    else:   
+            print("No New Files")
+job()
+        

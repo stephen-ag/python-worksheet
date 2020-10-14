@@ -1,0 +1,36 @@
+# -*- coding: utf-8 -*-
+"""
+Spyder Editor
+
+This is a temporary script file.
+"""
+import pandas as pd
+import xlrd
+#mport re
+file=pd.ExcelFile('C:/Users/1012031/MRM-Aug.xlsm')
+worksheets = file.sheet_names
+print('All worksheets',worksheets)
+
+#ata_sheet_list =\
+#x for x in worksheets if re.search('r',x,re.IGNORECASE)]
+#rint('sheet containing sales',data_sheet_list)
+ 
+each_data_worksheet ={}
+
+for data in worksheets:
+    each_data_worksheet[data]=pd.read_excel('C:/Users/1012031/MRM-Aug.xlsm',\
+    sheet_name = data,header = 2,index_col=0,usecols="B:M")
+
+length =len(worksheets)
+print(length)
+# the dataframe to be concatenated should be of same dimension else error msg
+df= pd.DataFrame()
+if length > 1:
+    for data in worksheets:
+        df= pd.concat([df,each_data_worksheet[data]],axis =1,sort=False)     
+else:
+    for data in worksheets:
+        df= each_data_worksheet[data]
+#print(Sales & Marketing)       
+print(df)      
+df.to_excel('C:/Users/1012031/MRM_outt1.xlsx')

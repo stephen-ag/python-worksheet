@@ -1,0 +1,229 @@
+
+from google.colab import drive
+drive.mount('/content/drive')
+
+cd drive/MyDrive/
+
+
+import pandas as pd
+df1=pd.read_excel(r'reading.xlsx',sheet_name=[2],skiprows = 3)
+
+df=df1[2] # getting dataframe from the dictionary based on the Key mention 2:
+
+##### running the code prepared to list peak and valley#########
+#######
+
+import pandas as pd
+import matplotlib.pyplot as plt
+
+col=df.columns
+dfmaxx=[]
+for i in col:
+    #print(df[i].max())
+    dfmaxx.append(df[i][(df[i].shift(1)<df[i])&(df[i].shift(-1)<df[i])].index)
+dfmaxx
+dff=pd.DataFrame(dfmaxx)
+lis=dff.values.tolist()
+
+dfminn=[]
+for i in col:
+    #print(df[i].max())
+    dfminn.append(df[i][(df[i].shift(1)>df[i])&(df[i].shift(-1)>df[i])].index)
+dff2=pd.DataFrame(dfminn)
+lis2=dff2.values.tolist()  
+
+
+peak=[]
+for i in lis:
+    for j in i:
+        peak.append(j)
+        
+valley=[]
+for i in lis2:
+    for j in i:
+        valley.append(j) 
+        
+data=set(peak)
+cleanedList = [x for x in data if x == x]
+fs = [int(x) for x in cleanedList]
+serie=pd.Series(fs)
+pp=serie.tolist()
+
+data2=set(valley)
+cleanedList2 = [x for x in data2 if x == x]
+fs2 = [int(x) for x in cleanedList2]
+serie2=pd.Series(fs2)
+pp2=serie2.tolist()
+
+
+total=[]
+total.append(pp)
+total.append(pp2)
+totalcleaned=[]
+for i in total:
+    for j in i:
+        totalcleaned.append(j)
+        
+totaldata=set(totalcleaned)
+fs3 = [int(x) for x in totaldata]
+serie3=pd.Series(fs3)
+pp3=serie3.tolist()     
+
+# listing the filtered rows and table from the peak and valley points
+new=df.loc[pp]
+print("List of peak points : \n" ,new.index.values)
+new.shape
+
+new2=df.loc[pp2]
+print("List of valley points : \n",new2.index.values)
+new2.shape
+
+new3=df.loc[pp3]
+print("List of Total values : \n",new3.index.values)
+new3.shape
+
+#####plottting the graphs############
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+fig,axs=plt.subplots(1,3,sharey=True)
+df.plot(kind='scatter',x='Unnamed: 0',y=1,ax=axs[0],figsize=(20,5))
+df.plot(kind='scatter',x='Unnamed: 0',y=2,ax=axs[1],color='red')
+df.plot(kind='scatter',x='Unnamed: 0',y=3,ax=axs[2],color ='green')
+
+#------------------------------------------
+# to calculate the 3 largest value from the tempvstime difference table
+largest=[]
+for i in df.columns:
+    lstn=df.nlargest(3,i,keep='all').index.values
+    largest.append(lstn)
+largest    
+
+res=[]
+for i in largest:
+    for j in i:
+        res.append(j)
+        
+result=set(res)
+#results=result.to_list()
+cleanedListx = [x for x in result if x == x]
+fss = [int(x) for x in cleanedListx]
+serie4=pd.Series(fss)
+results=serie4.tolist()  
+df.loc[results].index       
+ 
+
+#------------------------------
+bg_df = df.iloc[:, [i for i in range(len(df.columns)) if i%2 == 1]]
+signal_df = df.iloc[:, [i for i in range(len(df.columns)) if i%2 == 0]]
+
+signal_df1=signal_df.drop(['Unnamed: 0'], axis=1)
+bg_df1=bg_df.drop(['r1'], axis=1)
+
+result_df = pd.DataFrame(signal_df1.values - bg_df1.values)
+result_df.round(0)
+
+####################### find max using scipy fuction############################
+
+from scipy.signal import find_peaks
+col=df.columns
+pack=[]
+for i in col:
+  time_series = df[i]
+  indices = find_peaks(time_series)[0]
+  pack.append(indices)
+
+datt=[]
+for i in pack:
+    for j in i:
+        datt.append(j)
+        
+cleanedListt = [x for x in datt if x == x]
+fss = [int(x) for x in cleanedListt]
+seriee=pd.Series(fss)
+pple=seriee.tolist()
+
+##############################################
+########for valley use the below command and run the above macro
+df1=df*-1
+
+##########################################
+
+###### create tempvstime difference table###############
+bg_df = df.iloc[:, [i for i in range(len(df.columns)) if i%2 == 1]]
+signal_df = df.iloc[:, [i for i in range(len(df.columns)) if i%2 == 0]]
+
+signal_df1=signal_df.drop(['Unnamed: 0'], axis=1)
+result_df = pd.DataFrame(signal_df1.values - bg_df.values)
+diff=result_df.round(0)
+
+##########################################
+# to calculate the 3 largest value from the tempvstime difference table
+largest=[]
+for i in diff.columns:
+    lstn=diff.nlargest(3,i,keep='first').index.values
+    largest.append(lstn)
+largest    
+
+res=[]
+for i in largest:
+    for j in i:
+        res.append(j)
+        
+result2=set(res)
+#results=result.to_list()
+cleanedListx = [x for x in result2 if x == x]
+fss2 = [int(x) for x in cleanedListx]
+serie5=pd.Series(fss2)
+results2=serie5.tolist()  
+diff.loc[results2].index   
+##########################################
+
+col1=diff.columns
+dfmaxxx=[]
+for i in col1:
+    #print(df[i].max())
+    #dfmaxx.append(df[i][(df[i].shift(1)<df[i])&(df[i].shift(-1)<df[i])].index)
+    dfmaxxx.append(diff[i][(diff[i]>diff[i].shift(-1))&(diff[i]>diff[i].shift(1))].index)
+dfmaxxx
+dff1=pd.DataFrame(dfmaxx)
+lis=dff1.values.tolist()
+
+
+peak1=[]
+for i in lis:
+    for j in i:
+        peak1.append(j)
+
+data1=set(peak1)
+cleanedList_dif = [x for x in data1 if x == x]
+fs_diff = [int(x) for x in cleanedList_dif]
+serie_diff=pd.Series(fs_diff)
+pp_diff=serie_diff.tolist()
+
+total=[]
+total.append(pp_diff)
+totalcleaned_diff=[]
+for i in total:
+    for j in i:
+        totalcleaned_diff.append(j)
+        
+totaldata_diff=set(totalcleaned_diff)
+fs3_diff = [int(x) for x in totaldata_diff]
+serie33=pd.Series(fs3_diff)
+pp4_diff=serie33.tolist()     
+
+# listing the filtered rows and table from the peak points
+new_diff=diff.loc[pp4_diff]
+print(new_diff.shape)
+print("List of peak difference points : \n" ,new_diff.index.values)
+
+######################
+##########to download file from colab to local system.
+from google.colab import files
+files.download("file_name.xlsx")
+
+
+
+
